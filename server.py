@@ -1,6 +1,7 @@
 import socket
 from cryptography.fernet import Fernet
 
+
 class Server:
     def __init__(self, port, username):
         self.key = b'l3d9jKgRTKAMWazsSKBsKmTAZ3x9RfeUdfi3zKbmDPI='
@@ -11,6 +12,7 @@ class Server:
         self.client = None
         self.client_message = None
         self.serv_message = None
+        self.file_path = None
     
     def server_client_connect(self) :
         try:
@@ -41,6 +43,8 @@ class Server:
         client_message_decrypted = self.cryptography.decrypt(client_message)
 
         return client_message_decrypted.decode()
+    
+  
     def connection_close(self):
         self.server.close()
 

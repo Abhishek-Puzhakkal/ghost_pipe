@@ -1,6 +1,7 @@
 import argparse
 from client import Cient
 from server import Server
+from file_sharing import file_reciver, File_sender
 
 command = argparse.ArgumentParser()
 sub_command = command.add_subparsers(dest='mode', required=True)
@@ -14,6 +15,15 @@ listent_command = sub_command.add_parser('listen')
 listent_command.add_argument('--port', type=int, required=True, nargs=1)
 listent_command.add_argument('-u', required=True, type=str, nargs=1)
 
+share_file_command = sub_command.add_parser('share')
+share_file_command.add_argument('--port', type=int, required=True, nargs=1)
+share_file_command.add_argument('--addr', required=True, nargs=1)
+share_file_command.add_argument('--file', nargs=1, required=True)
+
+accept_file_command = sub_command.add_parser('accept_file')
+accept_file_command.add_argument('--path',required=True, nargs=1 )
+accept_file_command.add_argument('--port', required=True, nargs=1, type=int)
+
 
 user_input = command.parse_args()
 
@@ -24,10 +34,10 @@ if user_input.mode == 'listen':
     if clinet_addr:
         print(f'connected to {clinet_addr}')
         while True:
-            print('123')
+            
             
             quit_checker = list(clinet_message.split())
-            print(quit_checker)
+            
             if len(quit_checker) == 3 and quit_checker[2] == 'quit':
                 connection_close = server.connection_close()
                 print(connection_close)
@@ -64,7 +74,7 @@ elif user_input.mode == 'connect':
 
                     connection_close = client.clinet_socket_close()
                     print(connection_close)
-                    print('client code if worked ')
+                    
                     break
                 elif server_message:
                     print(f"{server_message}")
@@ -72,9 +82,16 @@ elif user_input.mode == 'connect':
 
                 connection_close = client.clinet_socket_close()
                 print(connection_close)
-                print('clinet code 2nd elif code workde')
+                
                 break
-            
+
+elif user_input.mode == 'share':
+    share_file = File_sender(user_input.addr, user_input.port, user_input.file)
+    share_file.send_file()
+elif user_input.mode == 'accept_file':
+    recv_file = file_reciver(user_input.path, user_input.port)
+    recv_file.recvfile()
+
 
 
 
