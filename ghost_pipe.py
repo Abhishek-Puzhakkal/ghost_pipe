@@ -2,6 +2,7 @@ import argparse
 from client import Cient
 from server import Server
 from file_sharing import file_reciver, File_sender
+import threading
 
 command = argparse.ArgumentParser()
 sub_command = command.add_subparsers(dest='mode', required=True)
@@ -30,60 +31,32 @@ user_input = command.parse_args()
 if user_input.mode == 'listen':
     server = Server(user_input.port, user_input.u)
     print(f'server started listening on port : {user_input.port}')
-    clinet_addr, clinet_message = server.server_client_connect()
-    if clinet_addr:
+    clinett, clinet_addr = server.server_client_connect()
+    if clinett:
         print(f'connected to {clinet_addr}')
-        while True:
-            
-            
-            quit_checker = list(clinet_message.split())
-            
-            if len(quit_checker) == 3 and quit_checker[2] == 'quit':
-                connection_close = server.connection_close()
-                print(connection_close)
-                break
-            elif clinet_message:
-                print(f'{clinet_message}')
-                message = input('you : ')
-                server_side_quit_checker = list(message.split())
+        trd = threading.Thread(target=server.server_cli_message, daemon=True)
+        trd.start()
+        
+        server.server_server_message()
+        trd.join()
 
-                if len(server_side_quit_checker) == 1 and server_side_quit_checker[0] == 'quit' :
-                    print('server side inside while loop elif block wokring')
-                    server.server_message(message)
-                    connection_close = server.connection_close()
-                    print('connection closed peace fully...')
-                    break
-                else:
-                
-                    server.server_message(message)
-                    clinet_message = server.cli_message()
-
+        server.serv_closing()
+        
 elif user_input.mode == 'connect':
     client = Cient(user_input.addr, user_input.port, user_input.u)
     connection_result = client.clinet_server_connection()
 
-    if connection_result == True:
-        print(f'connecntion succesfull now you can start chat ')
-        while True:
-            message = input('you : ')
-            quit_checker = list(message.split())
-            server_message = client.clinet_server_chat(message)
-            if server_message:
-                server_side_quit_checker = list(server_message.split())
-                if len(server_side_quit_checker) == 3 and server_side_quit_checker[2] == 'quit':
+    if connection_result:
+        trd = threading.Thread(target=client.client_server_message, daemon=True)
+        trd.start()
 
-                    connection_close = client.clinet_socket_close()
-                    print(connection_close)
-                    
-                    break
-                elif server_message:
-                    print(f"{server_message}")
-            elif len(quit_checker) == 1 and quit_checker[0] == 'quit' :
+        
+        client.clinet_clinet_message()
 
-                connection_close = client.clinet_socket_close()
-                print(connection_close)
-                
-                break
+        trd.join()
+
+        client.clt_close()
+        
 
 elif user_input.mode == 'share':
     share_file = File_sender(user_input.addr, user_input.port, user_input.file)
