@@ -114,6 +114,8 @@ class GpChatClient:
         self.client_gp_chat_socket = socket.socket()
         self.client_running = True
         self.quit_checker = list()
+        self.gp_cht_cryptography_ky = b'2b1gSNyIH1g3-huR0gAHcuCZK1mFURW46xiuWsEnw_M='
+        self.gp_cryptography_object = Fernet(self.gp_cht_cryptography_ky)
     def client_gp_chat_connection(self):
         try :
             self.client_gp_chat_socket.connect((self.addr, self.port))
@@ -130,13 +132,14 @@ class GpChatClient:
                     break
 
                 msg = self.uername + ' : ' + message
+                
                 if message == 'quit':
-                    self.client_gp_chat_socket.sendall(msg.encode())
+                    self.client_gp_chat_socket.sendall(self.gp_cryptography_object.encrypt(msg.encode()))
                     print('you enterd the "quit", so conection terminating....')
                     self.client_running = False
                     break
 
-                self.client_gp_chat_socket.sendall(msg.encode())
+                self.client_gp_chat_socket.sendall(self.gp_cryptography_object.encrypt(msg.encode()))
         except KeyboardInterrupt:
             print('keyboard intrepted ....')
         except Exception as e :
@@ -146,7 +149,7 @@ class GpChatClient:
         try:
             while self.client_running:
                 try:
-                    message = self.client_gp_chat_socket.recv(1024).decode()
+                    message = self.client_gp_chat_socket.recv(1024)
                 except OSError as e:
                     if e.winerror in (10053, 10054):
                         pass
@@ -158,7 +161,9 @@ class GpChatClient:
                 if not self.client_running:
                     break
                 
-                self.quit_checker = message.split()
+                decrypted_msg = self.gp_cryptography_object.decrypt(message).decode()
+
+                self.quit_checker = decrypted_msg.split()
                 
                 printing_msg = ' '.join(self.quit_checker[1::])
                 
@@ -167,7 +172,7 @@ class GpChatClient:
                     if len(self.quit_checker) == 4 and self.quit_checker[3] == 'quit':
                         print(f'\n{printing_msg}')
                         print(f'{self.quit_checker[1]} entered "quit" that person is terminating from group...')
-                    print(f'\n{printing_msg}')
+                    else:print(f'\n{printing_msg}')
                 elif self.quit_checker[0] == 'admin':
                     if len(self.quit_checker) == 4 and self.quit_checker[3] == 'quit':
                         print(f'\n{printing_msg}')

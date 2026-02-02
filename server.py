@@ -92,6 +92,8 @@ class GroupChatServer:
         self.server_running = True
         self.clients_dict = dict()
         self.quict_checker = list()
+        self.gp_cht_cryptography_ky = b'2b1gSNyIH1g3-huR0gAHcuCZK1mFURW46xiuWsEnw_M='
+        self.gp_cryptography_object = Fernet(self.gp_cht_cryptography_ky)
     def connection(self):
         self.gp_chat_svr_socket.bind(('0.0.0.0', self.port))
         self.gp_chat_svr_socket.listen()
@@ -107,7 +109,7 @@ class GroupChatServer:
                     if not self.server_running:
                         break
                     try:
-                        client_message = client.recv(1024).decode()
+                        client_message = client.recv(1024)
                     except OSError as e:
                         if e.winerror in (10053, 10054):
                             pass
@@ -120,21 +122,22 @@ class GroupChatServer:
                 
                     
                     
+                    decrypted_client_msg = self.gp_cryptography_object.decrypt(client_message).decode()
                     
                     broadcasting_flag = 'broadcasting'
                     
-                    if client_message and len(self.clients_dict) >= 2:
-                        self.quict_checker = client_message.split()
+                    if decrypted_client_msg and len(self.clients_dict) >= 2:
+                        self.quict_checker = decrypted_client_msg.split()
                         username = self.quict_checker[0]
                         if len(self.quict_checker) == 3 and self.quict_checker[2] == 'quit':
-                            broadcasting_message = broadcasting_flag + ' ' + client_message
-                            print(f'\n{client_message}')
+                            broadcasting_message = broadcasting_flag + ' ' + decrypted_client_msg
+                            print(f'\n{decrypted_client_msg}')
                             print(f'\n{username} quit, so that connection is closing...')
                             for clients in self.clients_dict:
                                 if clients == sender:
                                     pass
                                 else:
-                                    clients.sendall(broadcasting_message.encode())
+                                    clients.sendall(self.gp_cryptography_object.encrypt(broadcasting_message.encode()))
                             
                             client.close()
                             self.clients_dict.pop(client)
@@ -143,24 +146,24 @@ class GroupChatServer:
                         
                         else:
                               
-                            print(f'\n{client_message}')
-                            broadcasting_message = broadcasting_flag + ' ' + client_message
+                            print(f'\n{decrypted_client_msg}')
+                            broadcasting_message = broadcasting_flag + ' ' + decrypted_client_msg
                             for clients in self.clients_dict:
                                 if clients == sender:
                                     pass
                                 else:
-                                    clients.sendall(broadcasting_message.encode())
+                                    clients.sendall(self.gp_cryptography_object.encrypt(broadcasting_message.encode()))
                                     
-                    elif client_message and len(self.clients_dict) < 2:
-                        self.quict_checker = client_message.split()
+                    elif decrypted_client_msg and len(self.clients_dict) < 2:
+                        self.quict_checker = decrypted_client_msg.split()
                         
                         if len(self.quict_checker) == 3 and self.quict_checker[2] == "quit":
-                            print(f'\n{client_message}')
+                            print(f'\n{decrypted_client_msg}')
                             print('\nthe entire connection is closing....')
                             self.server_running = False
                             break
                         else:
-                            print(f'\n{client_message}')
+                            print(f'\n{decrypted_client_msg}')
             except KeyboardInterrupt:
                 print('\nkeyboard intrepted....')
             except Exception as e:
@@ -194,12 +197,12 @@ class GroupChatServer:
                 if server_message == 'quit':
                     self.server_running = False
                     for clients in self.clients_dict:
-                        clients.sendall(server_message_broadcast.encode())
+                        clients.sendall(self.gp_cryptography_object.encrypt(server_message_broadcast.encode()))
                     print('you enterd quit , connection going to terminate....')
                     
                     break
                 for clients in self.clients_dict:
-                    clients.sendall(server_message_broadcast.encode())
+                    clients.sendall(self.gp_cryptography_object.encrypt(server_message_broadcast.encode()))
         except KeyboardInterrupt:
             print('keyboard interpted....')
         except Exception as e:
