@@ -1,7 +1,7 @@
 import socket
 from cryptography.fernet import Fernet
 
-class Cient:
+class Client:
     def __init__(self, ip, port, username):
         self.key = b'l3d9jKgRTKAMWazsSKBsKmTAZ3x9RfeUdfi3zKbmDPI='
         self.cryptography = Fernet(self.key)
@@ -27,8 +27,9 @@ class Cient:
             print('keyboard intrpted ')
             self.client_socket.close()
         except Exception as e:
+            
             print(e)
-    def clinet_clinet_message(self):
+    def clinet_snt_msg(self):
         while self.running:
             message = input('you : ')
             if not self.running:
@@ -58,13 +59,23 @@ class Cient:
                 self.client_socket.sendall(self.cryptography.encrypt(self.clinet_message.encode()))
                 
 
-        '''self.client_socket.close()'''
+        
 
 
-    def client_server_message(self):
+    def client_recv_msg(self):
 
         while self.running:
-            servermessage = self.client_socket.recv(1024)
+            try: 
+                servermessage = self.client_socket.recv(1024)
+            except OSError as e:
+                if e.winerror == 10053:
+                    print('connection closed peacefully...')
+                
+                else:
+                    raise
+            except Exception as e :
+                
+                print(e)
             
 
             if not self.running:
@@ -89,14 +100,94 @@ class Cient:
                     break
                 print(f'\n{self.server_message}')
 
-        '''self.client_socket.close()'''
+        
 
     def clt_close(self):
         self.client_socket.close()
 
 
+class GpChatClient:
+    def __init__(self, addr:str, port:int, username:str):
+        self.uername = username[0]
+        self.port = port[0]
+        self.addr = addr[0]
+        self.client_gp_chat_socket = socket.socket()
+        self.client_running = True
+        self.quit_checker = list()
+    def client_gp_chat_connection(self):
+        try :
+            self.client_gp_chat_socket.connect((self.addr, self.port))
+            return True
+        except Exception as e :
+            
+            print(e)
+    def client_gp_cht_snt_msg(self):
+        try:
 
+            while self.client_running:
+                message = input('\nyou : ')
+                if not self.client_running:
+                    break
 
+                msg = self.uername + ' : ' + message
+                if message == 'quit':
+                    self.client_gp_chat_socket.sendall(msg.encode())
+                    print('you enterd the "quit", so conection terminating....')
+                    self.client_running = False
+                    break
+
+                self.client_gp_chat_socket.sendall(msg.encode())
+        except KeyboardInterrupt:
+            print('keyboard intrepted ....')
+        except Exception as e :
+            
+            print(e)
+    def client_gp_cht_recv_msg(self):
+        try:
+            while self.client_running:
+                try:
+                    message = self.client_gp_chat_socket.recv(1024).decode()
+                except OSError as e:
+                    if e.winerror in (10053, 10054):
+                        pass
+                    else: raise
+                except Exception as e:
+                    
+                    print(e)
+                
+                if not self.client_running:
+                    break
+                
+                self.quit_checker = message.split()
+                
+                printing_msg = ' '.join(self.quit_checker[1::])
+                
+
+                if self.quit_checker[0] == 'broadcasting':
+                    if len(self.quit_checker) == 4 and self.quit_checker[3] == 'quit':
+                        print(f'\n{printing_msg}')
+                        print(f'{self.quit_checker[1]} entered "quit" that person is terminating from group...')
+                    print(f'\n{printing_msg}')
+                elif self.quit_checker[0] == 'admin':
+                    if len(self.quit_checker) == 4 and self.quit_checker[3] == 'quit':
+                        print(f'\n{printing_msg}')
+                        print('server enterd "quit", enteire chat is terminating...')
+                        self.client_running = False
+                        break
+                    print(f'\n{printing_msg}')
+        except KeyboardInterrupt :
+            print('\nkeyboard interepted...')
+        except Exception as e :
+            
+            print(e)
+                
+
+    def client_gp_cht_connection_cls(self):
+        self.client_gp_chat_socket.close()
+        print('\nthe connection closed peacefully....')
+
+        
+        
     
 
 
