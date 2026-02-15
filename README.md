@@ -1,8 +1,8 @@
 INTRODUCTION
 
-  ghost_pipe is a lan based communication and file sharing tool developed using python , in this tool ONE TO ONE , and GROUP CHATTING is possible, There is no os limitaions, work well in any os environment
-  file sharing is only from one computer to another , not one comupter to many computer's
-    courently ghost_pipe is cli tool , in upcomming future defenetly it have a TUI using Textual framework 
+  ghost_pipe is a lan based communication and file sharing tool developed using python , in this tool ONE TO ONE , and GROUP CHATTING is possible, There is no os limitaions, work well in any os environment.
+  file sharing is only from one computer to another , not one comupter to many computer's.
+    currently ghost_pipe is cli tool , in upcomming future definitely it have a TUI using Textual framework 
 
 FEATURES 
 
