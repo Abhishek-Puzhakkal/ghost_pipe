@@ -1,16 +1,18 @@
-INTRODUCTION
+# **GHOST_PIPE**
+
+### **INTRODUCTION**
 
   ghost_pipe is a lan based communication and file sharing tool developed using python , in this tool ONE TO ONE , and GROUP CHATTING is possible, There is no os limitaions, work well in any os environment.
   file sharing is only from one computer to another , not one comupter to many computer's.
     currently ghost_pipe is cli tool , in upcomming future definitely it have a TUI using Textual framework 
 
-FEATURES 
+### **FEATURES**
 
   1.file sharing from one commuter to another computer
   2.ONE TO ONE chat, one server an one client
   3.GROUP CHAT, one server and many client's
 
-INSTALLTION
+### **INSTALLTION
 
     git  clone https://github.com/Abhishek-Puzhakkal/ghost_pipe.git
 
@@ -22,7 +24,7 @@ INSTALLTION
 
     pip install -r requirements.txt
 
-USEAGE 
+### **USEAGE 
 
    ONE TO ONE CHAT 
 
@@ -56,7 +58,7 @@ USEAGE
 
     python ghost_pipe.py connect-groupchat --addr 192.168.1.3 --port 1234 -u client_1
                                         
-  FILE SHARING
+  ### **FILE SHARING**
 
   FILE RECEVER COMMAND 
 
@@ -66,7 +68,7 @@ USEAGE
 
     python ghost_pipe.py accept_file --port 1234 --path received_file.txt
                 
-  FILE SENDER COMMAND 
+  FILE SENDER COMMAND
 
   ghost_pipe.py share --file < path of the sending file > --addr < internal ip of recever > --port < listening port of receiver > 
   
@@ -75,7 +77,7 @@ USEAGE
     python ghost_pipe.py share --file hello.txt --addr 192.168.1.3 --port 1234
 
                     
-Author :- Abhishek Puzhakkal
+### **Author :- Abhishek Puzhakkal**
 
   
 
