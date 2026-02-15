@@ -61,10 +61,18 @@ USEAGE
   FILE RECEVER COMMAND 
 
   ghost_pipe.py accept_file --port <specify a port for sender to connect> --path < specify a path to save the file >
+
+  if the received file need to save the same directory , just specify the file name , other wise full path is needed 
+
+    python ghost_pipe.py accept_file --port 1234 --path received_file.txt
                 
   FILE SENDER COMMAND 
 
   ghost_pipe.py share --file < path of the sending file > --addr < internal ip of recever > --port < listening port of receiver > 
+  
+  if the file, that need to send , is in same directery just specify the name of the file , otherwise needed the full path 
+
+    python ghost_pipe.py share --file hello.txt --addr 192.168.1.3 --port 1234
 
                     
 Author :- Abhishek Puzhakkal
