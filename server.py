@@ -35,7 +35,7 @@ class Server:
     
     def server_snt_msg(self):
         while self.running:
-            message = input('you : ')
+            message = input('\nyou : ')
             self.serv_message = self.user_name + ' : ' + message
 
             if not self.running:

@@ -31,7 +31,7 @@ class Client:
             print(e)
     def clinet_snt_msg(self):
         while self.running:
-            message = input('you : ')
+            message = input('\nyou : ')
             if not self.running:
                 break
 
