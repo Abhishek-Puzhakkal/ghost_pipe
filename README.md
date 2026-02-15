@@ -11,59 +11,60 @@ FEATURES
   3.GROUP CHAT, one server and many client's
 
 INSTALLTION
-  git  clone https://github.com/Abhishek-Puzhakkal/ghost_pipe.git
 
-  cd ghost_pipe
+    git  clone https://github.com/Abhishek-Puzhakkal/ghost_pipe.git
 
-  source venv/bin/activate      # Linux
+    cd ghost_pipe
 
-  venv\\Scripts\\activate         # Windows
+    source venv/bin/activate      # Linux
 
-  pip install -r requirements.txt
+    venv\\Scripts\\activate         # Windows
+
+    pip install -r requirements.txt
 
 USEAGE 
 
    ONE TO ONE CHAT 
 
-        ghost_pipe.py listen --port < specify a port for server listening for incoming connection> -u <server username for the chat>
+  ghost_pipe.py listen --port < specify a port for server listening for incoming connection> -u <server username for the chat>
 
-                    #Above command is for server to listen for client connection then later communication 
+  #Above command is for server to listen for client connection then later communication 
                     # To end the chat just type and send 'quit'
                     
-                    # eg :- ghost_pipe.py listen --port 1234 -u server 
+    python ghost_pipe.py listen --port 1234 -u server 
 
-                ghost_pipe.py connect --addr <internal ip of the server> --port <server listening port> -u < your usernmae for the chat>
+  ghost_pipe.py connect --addr <internal ip of the server> --port <server listening port> -u < your usernmae for the chat>
 
-                    #Above command is for connect to server for the one to one chat
+  #Above command is for connect to server for the one to one chat
                     #To end the chat just type and send 'quit'
 
-                    #eg :- ghost_pipe.py connect --addr 192.168.1.3 --port 1234 -u client
+    python ghost_pipe.py connect --addr 192.168.1.3 --port 1234 -u client
                                         
   GROUP CHATING
 
-                ghost_pipe.py listen-groupchat --port <specify a port for server listening for incoming connection> -u <server username for the group chat >
+  ghost_pipe.py listen-groupchat --port <specify a port for server listening for incoming connection> -u <server username for the group chat >
 
-                    #Above command is for server to listening and intiating group chat
+  #Above command is for server to listening and intiating group chat
                     # To end the chat just type and send 'quit'
 
-                    # eg :- ghost_pipe.py listening-groupchat --port 1234 -u server
+    python ghost_pipe.py listening-groupchat --port 1234 -u server
                 
-                ghost_pipe.py connect-groupchat --addr <internal ip of the server> --port <server listening port> -u < your usernmae for the chat>
+  ghost_pipe.py connect-groupchat --addr <internal ip of the server> --port <server listening port> -u < your usernmae for the chat>
 
-                    #Above command is for client's to connect to server for the group chat 
+  #Above command is for client's to connect to server for the group chat 
                     # To end the chat just type and send 'quit'
 
-                    # eg :- ghost_pipe.py connect-groupchat --addr 192.168.1.3 --port 1234 -u client_1
+    python ghost_pipe.py connect-groupchat --addr 192.168.1.3 --port 1234 -u client_1
                                         
   FILE SHARING
 
-                FILE RECEVER COMMAND 
+  FILE RECEVER COMMAND 
 
-                    ghost_pipe.py accept_file --port <specify a port for sender to connect> --path < specify a path to save the file >
+  ghost_pipe.py accept_file --port <specify a port for sender to connect> --path < specify a path to save the file >
                 
-                FILE SENDER COMMAND 
+  FILE SENDER COMMAND 
 
-                    ghost_pipe.py share --file < path of the sending file > --addr < internal ip of recever > --port < listening port of receiver > 
+  ghost_pipe.py share --file < path of the sending file > --addr < internal ip of recever > --port < listening port of receiver > 
 
                     
 Author :- Abhishek Puzhakkal
